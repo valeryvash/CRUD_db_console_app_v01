@@ -52,7 +52,7 @@
                     <propertyFile>src/main/resources/liquibase.properties</propertyFile>
                     <changeLogFile>src/main/resources/dbChangeLog.xml</changeLogFile>
                     <outputChangeLogFile>src/main/resources/outDBChangeLog.xml</outputChangeLogFile>
-                    <hubApiKey></hubApiKey>
+                    <hubApiKey>C6gZ1S-fhtL6bVFEuG-VBAga0TrsTk96E3DHwGzv1Gg</hubApiKey>
                     <hubProjectId>f829e616-12e7-43ec-afb8-e3bb94b7bcb0</hubProjectId>
                 </configuration>
             </plugin>

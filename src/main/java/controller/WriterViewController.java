@@ -3,6 +3,8 @@ package controller;
 import model.Post;
 import model.Writer;
 import repository.*;
+import service.PostService;
+import service.WriterService;
 import util.EntitiesPrinter;
 
 import java.util.List;
@@ -12,8 +14,8 @@ import java.util.stream.Stream;
 
 public class WriterViewController {
 
-    private final WriterRepository wr = new JDBCWriterRepositoryImpl();
-    private final PostRepository pr = new JDBCPostRepositoryImpl();
+    private final WriterService writerService = new WriterService(new JDBCWriterRepositoryImpl());
+    private final PostService postService = new PostService(new JDBCPostRepositoryImpl());
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -27,9 +29,9 @@ public class WriterViewController {
         do {
             String s = sc.nextLine();
             if (s.equalsIgnoreCase("q")) System.exit(0);
-            if (!wr.writerNameContains(s)) {
+            if (!writerService.writerNameContains(s)) {
                 w.setWriterName(s);
-                wr.add(w);
+                writerService.add(w);
                 System.out.println("New writer created");
                 ep.print(w);
                 break;
@@ -45,17 +47,17 @@ public class WriterViewController {
         do {
             String s = sc.nextLine();
             if (s.equalsIgnoreCase("q")) System.exit(0);
-            if (!wr.writerNameContains(s)) {
+            if (!writerService.writerNameContains(s)) {
                 try {
                     Long id = Long.valueOf(s);
-                    if (wr.containsId(id)){
-                        w = wr.getById(id);
+                    if (writerService.containsId(id)){
+                        w = writerService.getById(id);
                         ep.print(w);
                         return w;
                     }
                 } catch (NumberFormatException ignored) {}
             } else {
-                w = wr.getByName(s);
+                w = writerService.getByName(s);
                 ep.print(w);
                 return w;
             }
@@ -69,9 +71,9 @@ public class WriterViewController {
         do {
             String s = sc.nextLine();
             if (s.equalsIgnoreCase("q")) System.exit(0);
-            if (!wr.writerNameContains(s)) {
+            if (!writerService.writerNameContains(s)) {
                 w.setWriterName(s);
-                wr.update(w);
+                writerService.update(w);
                 System.out.println("Writer updated");
                 ep.print(w);
                 break;
@@ -90,7 +92,7 @@ public class WriterViewController {
             String s = sc.nextLine().toLowerCase();
             if (s.equalsIgnoreCase("q")) System.exit(0);
             if (s.equalsIgnoreCase("y")) {
-                wr.delete(w);
+                writerService.delete(w);
                 System.out.println("Writer deleted.");
                 break;
             }
@@ -100,7 +102,7 @@ public class WriterViewController {
     public Stream<Post> getWriterPosts(boolean print) {
         Writer w = getWriter();
         long writerId = w.getId();
-        List<Post> writerPosts = pr.getPostsStreamByWriter(w).collect(Collectors.toList());
+        List<Post> writerPosts = postService.getPostsStreamByWriter(w).collect(Collectors.toList());
         if (!writerPosts.isEmpty()){
             if (print) {
                 writerPosts.forEach(ep::print);
@@ -115,7 +117,7 @@ public class WriterViewController {
     }
 
     public void getAllWriters() {
-        wr.getObjectsStream().forEach(ep::print);
+        writerService.getObjectsStream().forEach(ep::print);
     }
 
 }

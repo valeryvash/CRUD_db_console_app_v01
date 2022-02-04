@@ -7,7 +7,6 @@ import model.Writer;
 import repository.*;
 import util.EntitiesPrinter;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

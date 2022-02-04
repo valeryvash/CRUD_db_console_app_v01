@@ -2,6 +2,7 @@ package controller;
 
 import model.Tag;
 import repository.*;
+import service.TagService;
 import util.EntitiesPrinter;
 
 
@@ -9,14 +10,14 @@ import java.util.Scanner;
 
 public class TagViewController {
 
-    private final TagRepository tr = new JDBCTagRepositoryImpl();
+    private final TagService tagService = new TagService(new JDBCTagRepositoryImpl());
 
     private final Scanner sc = new Scanner(System.in);
 
     private final EntitiesPrinter ep = new EntitiesPrinter();
 
     public void printAllTags() {
-        tr.getObjectsStream().forEach(ep::print);
+        tagService.getObjectsStream().forEach(ep::print);
     }
 
     public void updateTag() {
@@ -26,19 +27,19 @@ public class TagViewController {
             String s = sc.nextLine();
             if (s.equalsIgnoreCase("q")) System.exit(0);
 
-            if (!tr.tagNameContains(s)) {
+            if (!tagService.tagNameContains(s)) {
                 t.setTagName(s);
                 break;
             }
             System.out.println("Such tag name already exist! Try again");
         } while (true);
-        tr.update(t);
+        tagService.update(t);
         System.out.println("Tag successfully updated");
     }
 
     public void deleteTag() {
         Tag t = getTag();
-        tr.delete(t);
+        tagService.delete(t);
     }
 
     private Tag getTag() {
@@ -46,17 +47,17 @@ public class TagViewController {
         do {
             String s = sc.nextLine();
             if (s.equalsIgnoreCase("q")) System.exit(0);
-            if (!tr.tagNameContains(s)) {
+            if (!tagService.tagNameContains(s)) {
                 try {
                     Long id = Long.valueOf(s);
-                    if (tr.containsId(id)){
-                        Tag t = tr.getById(id);
+                    if (tagService.containsId(id)){
+                        Tag t = tagService.getById(id);
                         ep.print(t);
                         return t;
                     }
                 } catch (NumberFormatException ignored) {}
             } else {
-                Tag t = tr.getByName(s);
+                Tag t = tagService.getByName(s);
                 ep.print(t);
                 return t;
             }
